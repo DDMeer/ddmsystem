@@ -1,0 +1,22 @@
+{% extends 'sysinfo/base.html' %}
+
+{% block title %}
+    Hospital - {{ hospital }}
+{% endblock %}
+
+{% block content %}
+    <h2>{{ hospital }}</h2>
+
+    <section>
+        <h3>Diseases</h3>
+        <ul>
+            {% for disease in disease_list %}
+                <li>
+                    <a href="">{{ disease }}</a>
+                </li>
+            {% empty %}
+                <li><em>There are currently no diseases in this hospital.</em></li>
+            {% endfor %}
+        </ul>
+    </section>
+{% endblock %}

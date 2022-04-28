@@ -1,0 +1,23 @@
+{% extends 'sysinfo/base.html' %}
+
+{% block title %}
+    Treatment - {{ treatment }}
+{% endblock %}
+
+{% block content %}
+    <h2>{{ treatment }}</h2>
+
+    <section>
+        <table>
+            <tr>
+                <th>Patient:</th>
+                <td><a href="">{{ patient }}</a></td>
+            </tr>
+            <tr>
+                <th>Disease:</th>
+                <td><a href="">{{ disease }}</a></td>
+            </tr>
+        </table>
+    </section>
+
+{% endblock %}

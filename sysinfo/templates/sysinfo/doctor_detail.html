@@ -1,0 +1,41 @@
+{% extends 'sysinfo/base.html' %}
+
+{% block title %}
+    Doctor - {{ doctor }}
+{% endblock %}
+
+{% block content %}
+    <h2>{{ doctor }}</h2>
+
+    <section>
+        <table>
+            <tr>
+                <th>First Name:</th>
+                <td>{{ doctor.first_name }}</td>
+            </tr>
+            <tr>
+                <th>Last Name:</th>
+                <td>{{ doctor.last_name }}</td>
+            </tr>
+            {% if doctor.disambiguator %}
+                <tr>
+                    <th>Disambiguator:</th>
+                    <td>{{ doctor.disambiguator }}</td>
+                </tr>
+            {% endif %}
+        </table>
+    </section>
+
+    <section>
+        <h3>Diseases</h3>
+        <ul>
+            {% for disease in disease_list %}
+                <li>
+                    <a href="">{{ disease }}</a>
+                </li>
+            {% empty %}
+                <li><em>There are currently no diseases for this doctor.</em></li>
+            {% endfor %}
+        </ul>
+    </section>
+{% endblock %}

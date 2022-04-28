@@ -121,8 +121,8 @@ class Disease(models.Model):
 
 class Treatment(models.Model):
     treatment_id = models.AutoField(primary_key=True)
-    patient = models.ForeignKey(Patient, related_name='treatment', on_delete=models.PROTECT)
-    disease = models.ForeignKey(Disease, related_name='treatment', on_delete=models.PROTECT)
+    patient = models.ForeignKey(Patient, related_name='treatments', on_delete=models.PROTECT)
+    disease = models.ForeignKey(Disease, related_name='treatments', on_delete=models.PROTECT)
 
     def __str__(self):
         return '%s / %s' % (self.disease, self.patient)
