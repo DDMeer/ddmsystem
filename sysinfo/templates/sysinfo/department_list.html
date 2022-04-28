@@ -1,0 +1,18 @@
+{% extends 'sysinfo/base.html' %}
+
+{% block title %}
+    Department List
+{% endblock %}
+
+{% block content %}
+    <h2>Department List</h2>
+    <ul>
+        {% for department in department_list %}
+            <li>
+                <a href="">{{ department }}</a>
+            </li>
+        {% empty %}
+            <li><em>There are currently no department available.</em></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

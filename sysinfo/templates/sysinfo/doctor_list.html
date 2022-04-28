@@ -1,0 +1,18 @@
+{% extends 'sysinfo/base.html' %}
+
+{% block title %}
+    Doctor List
+{% endblock %}
+
+{% block content %}
+    <h2>Doctor List</h2>
+    <ul>
+        {% for doctor in doctor_list %}
+            <li>
+                <a href="">{{ doctor }}</a>
+            </li>
+        {% empty %}
+            <li><em>There are currently no doctors available.</em></li>
+        {% endfor %}
+    </ul>
+{% endblock %}
