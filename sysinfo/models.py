@@ -55,8 +55,6 @@ class Department(models.Model):
         ]
 
 
-
-
 class Doctor(models.Model):
     doctor_id = models.AutoField(primary_key=True)
     first_name = models.CharField(max_length=45)
