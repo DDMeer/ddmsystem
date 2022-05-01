@@ -6,16 +6,23 @@
 
 {% block content %}
     <h2>{{ hospital }}</h2>
+    <ul>
+        <li>
+          <a href="{{ hospital.get_update_url }}">
+            Edit Hospital</a></li>
+          <a href="{{ hospital.get_delete_url }}">
+            Delete Hospital</a></li>
+    </ul>
 
     <section>
         <h3>Diseases</h3>
         <ul>
             {% for disease in disease_list %}
                 <li>
-                    <a href="">{{ disease }}</a>
+                    <a href="{{ disease.get_absolute_url }}">{{ disease }}</a>
                 </li>
             {% empty %}
-                <li><em>There are currently no diseases in this hospital.</em></li>
+                <li><em>There are currently no diseases for this hospital.</em></li>
             {% endfor %}
         </ul>
     </section>

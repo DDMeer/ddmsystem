@@ -1,0 +1,19 @@
+{% extends 'sysinfo/base.html' %}
+
+{% block title %}
+    Delete Doctor
+{% endblock %}
+
+{% block content %}
+    <form
+        action="{{ doctor.get_delete_url }}"
+        method="post">
+        {% csrf_token %}
+        <p>
+            Are you sure that you want to delete
+            doctor {{ doctor }}?
+        </p>
+        <a href="{{ doctor.get_absolute_url }}">Cancel</a>
+        <button type="submit">Delete Doctor</button>
+    </form>
+{% endblock %}

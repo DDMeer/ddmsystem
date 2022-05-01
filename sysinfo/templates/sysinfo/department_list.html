@@ -6,13 +6,17 @@
 
 {% block content %}
     <h2>Department List</h2>
+    <div>
+        <a href="{% url 'sysinfo_department_create_urlpattern' %}">
+            Create New Course</a>
+    </div>
     <ul>
         {% for department in department_list %}
             <li>
-                <a href="">{{ department }}</a>
+                <a href="{{ department.get_absolute_url }}">{{ department }}</a>
             </li>
         {% empty %}
-            <li><em>There are currently no department available.</em></li>
+            <li><em>There are currently no departments available.</em></li>
         {% endfor %}
     </ul>
 {% endblock %}

@@ -6,12 +6,20 @@
 
 {% block content %}
     <h2>{{ disease }}</h2>
+    <ul>
+        <li>
+          <a href="{{ disease.get_update_url }}">
+            Edit Disease</a></li>
+        <li>
+          <a href="{{ disease.get_delete_url }}">
+            Delete Disease</a></li>
+    </ul>
 
     <section>
         <table>
             <tr>
                 <th>Department:</th>
-                <td><a href="">{{ department }}</a></td>
+                <td><a href="{{ department.get_absolute_url }}">{{ department }}</a></td>
             </tr>
             <tr>
                 <th>Disease Name:</th>
@@ -19,23 +27,23 @@
             </tr>
             <tr>
                 <th>Hospital:</th>
-                <td><a href="">{{ hospital }}</a></td>
+                <td><a href="{{ hospital.get_absolute_url }}">{{ hospital }}</a></td>
             </tr>
 
             <tr>
                 <th>Doctor:</th>
-                <td><a href="">{{ doctor }}</a></td>
+                <td><a href="{{ doctor.get_absolute_url }}">{{ doctor }}</a></td>
             </tr>
         </table>
 
     </section>
 
     <section>
-        <h3>Treatment</h3>
+        <h3>Treatments</h3>
         <ul>
             {% for treatment in treatment_list %}
                 <li>
-                    <a href="">{{ treatment.patient }}</a>
+                    <a href="{{ treatment.get_absolute_url }}">{{ treatment.student }}</a>
                 </li>
             {% empty %}
                 <li><em>There are currently no patients have this disease.</em></li>

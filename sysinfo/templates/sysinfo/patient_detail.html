@@ -6,6 +6,14 @@
 
 {% block content %}
     <h2>{{ patient }}</h2>
+    <ul>
+        <li>
+          <a href="{{ patient.get_update_url }}">
+            Edit Patient</a></li>
+          <a href="{{ patient.get_delete_url }}">
+            Delete Patient</a></li>
+    </ul>
+
     <section>
         <table>
             <tr>
@@ -30,7 +38,7 @@
         <ul>
             {% for treatment in treatment_list %}
                 <li>
-                    <a href="">{{ treatment.disease }}</a>
+                    <a href="{{ treatment.get_absolute_url }}">{{ treatment.section }}</a>
                 </li>
             {% empty %}
                 <li><em>This patient is not currently have any diseases.</em></li>

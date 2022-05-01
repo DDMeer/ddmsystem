@@ -6,10 +6,14 @@
 
 {% block content %}
     <h2>Hospital List</h2>
+    <div>
+      <a href="{% url 'sysinfo_hospital_create_urlpattern' %}">
+        Create New Hospital</a>
+    </div>
     <ul>
         {% for hospital in hospital_list %}
             <li>
-                <a href="">{{ hospital }}</a>
+                <a href="{{ hospital.get_absolute_url }}">{{ hospital }}</a>
             </li>
         {% empty %}
             <li><em>There are currently no hospitals available.</em></li>

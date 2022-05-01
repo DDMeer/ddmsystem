@@ -1,0 +1,15 @@
+{% extends 'sysinfo/base.html' %}
+
+{% block title %}
+    Update Treatment
+{% endblock %}
+
+{% block content %}
+    <form
+        action="{{ treatment.get_update_url }}"
+        method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Update Treatment</button>
+    </form>
+{% endblock %}

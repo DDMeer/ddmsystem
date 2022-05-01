@@ -6,10 +6,14 @@
 
 {% block content %}
     <h2>Patient List</h2>
+    <div>
+      <a href="{% url 'sysinfo_patient_create_urlpattern' %}">
+        Create New Patient</a>
+    </div>
     <ul>
         {% for patient in patient_list %}
             <li>
-                <a href="">{{ patient }}</a>
+                <a href="{{ patient.get_absolute_url }}">{{ patient }}</a>
             </li>
         {% empty %}
             <li><em>There are currently no patients available.</em></li>

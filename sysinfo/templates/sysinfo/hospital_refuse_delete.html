@@ -1,0 +1,26 @@
+{% extends 'sysinfo/base.html' %}
+
+{% block title %}
+    Error Deleting Hospital
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h2>Error Deleting Hospital</h2>
+        <p>
+            You may not delete hospital {{ hospital }}.  This
+            hospital is currently associated with the following
+            diseases:
+        </p>
+
+        <ul>
+            {% for disease in diseases %}
+            <li><a href="{{ disease.get_absolute_url }}">{{ disease }}</a></li>
+            {%  endfor %}
+        </ul>
+
+        <p>
+            Return to <a href="{% url 'sysinfo_semester_list_urlpattern' %}">Hospital List</a>.
+        </p>
+    </div>
+{% endblock %}

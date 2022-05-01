@@ -1,0 +1,26 @@
+{% extends 'sysinfo/base.html' %}
+
+{% block title %}
+    Error Deleting Disease
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h2>Error Deleting Disease</h2>
+        <p>
+            You may not delete disease {{ disease }}.  This
+            disease currently has the following
+            treatments:
+        </p>
+
+        <ul>
+            {% for treatment in treatments %}
+            <li><a href="{{ treatment.get_absolute_url }}">{{ treatment.patient }}</a></li>
+            {%  endfor %}
+        </ul>
+
+        <p>
+            Return to <a href="{% url 'sysinfo_disease_list_urlpattern' %}">Doctor List</a>.
+        </p>
+    </div>
+{% endblock %}

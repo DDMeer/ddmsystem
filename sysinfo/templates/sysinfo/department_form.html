@@ -1,0 +1,15 @@
+{% extends 'sysinfo/base.html' %}
+
+{% block title %}
+    Create Department
+{% endblock %}
+
+{% block content %}
+    <form
+        action="{% url 'sysinfo_department_create_urlpattern'%}"
+        method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Create Department</button>
+    </form>
+{% endblock %}

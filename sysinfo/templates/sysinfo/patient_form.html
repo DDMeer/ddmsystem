@@ -1,0 +1,15 @@
+{% extends 'sysinfo/base.html' %}
+
+{% block title %}
+    Create Patient
+{% endblock %}
+
+{% block content %}
+    <form
+        action="{% url 'sysinfo_patient_create_urlpattern'%}"
+        method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Create Patient</button>
+    </form>
+{% endblock %}

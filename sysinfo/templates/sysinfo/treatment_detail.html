@@ -6,16 +6,23 @@
 
 {% block content %}
     <h2>{{ treatment }}</h2>
+    <ul>
+        <li>
+          <a href="{{ treatment.get_update_url }}">
+            Edit Treatment</a></li>
+          <a href="{{ treatment.get_delete_url }}">
+            Delete Treatment</a></li>
+    </ul>
 
     <section>
         <table>
             <tr>
                 <th>Patient:</th>
-                <td><a href="">{{ patient }}</a></td>
+                <td><a href="{{ patient.get_absolute_url }}">{{ patient }}</a></td>
             </tr>
             <tr>
                 <th>Disease:</th>
-                <td><a href="">{{ disease }}</a></td>
+                <td><a href="{{ disease.get_absolute_url }}">{{ disease }}</a></td>
             </tr>
         </table>
     </section>

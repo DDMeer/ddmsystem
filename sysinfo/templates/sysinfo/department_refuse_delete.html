@@ -1,0 +1,26 @@
+{% extends 'sysinfo/base.html' %}
+
+{% block title %}
+    Error Deleting Department
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h2>Error Deleting Departments</h2>
+        <p>
+            You may not delete department {{ department }}.  This
+            department is currently associated with the following
+            diseases:
+        </p>
+
+        <ul>
+            {% for disease in diseases %}
+            <li><a href="{{ disease.get_absolute_url }}">{{ disease }}</a></li>
+            {%  endfor %}
+        </ul>
+
+        <p>
+            Return to <a href="{% url 'sysinfo_department_list_urlpattern' %}">Department List</a>.
+        </p>
+    </div>
+{% endblock %}

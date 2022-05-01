@@ -6,10 +6,14 @@
 
 {% block content %}
     <h2>Doctor List</h2>
+    <div>
+      <a href="{% url 'sysinfo_doctor_create_urlpattern' %}">
+        Create New Doctor</a>
+    </div>
     <ul>
         {% for doctor in doctor_list %}
             <li>
-                <a href="">{{ doctor }}</a>
+                <a href="{{ doctor.get_absolute_url }}">{{ doctor }}</a>
             </li>
         {% empty %}
             <li><em>There are currently no doctors available.</em></li>

@@ -1,0 +1,26 @@
+{% extends 'sysinfo/base.html' %}
+
+{% block title %}
+    Error Deleting Doctor
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h2>Error Deleting Doctor</h2>
+        <p>
+            You may not delete doctor {{ doctor }}.  This
+            doctor is currently responsible for the following
+            diseases:
+        </p>
+
+        <ul>
+            {% for disease in diseases %}
+            <li><a href="{{ disease.get_absolute_url }}">{{ disease }}</a></li>
+            {%  endfor %}
+        </ul>
+
+        <p>
+            Return to <a href="{% url 'sysinfo_doctor_list_urlpattern' %}">Doctor List</a>.
+        </p>
+    </div>
+{% endblock %}

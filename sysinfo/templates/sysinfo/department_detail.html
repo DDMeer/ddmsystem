@@ -6,11 +6,19 @@
 
 {% block content %}
     <h2>{{ department }}</h2>
+    <ul>
+        <li>
+            <a href="{{ department.get_update_url }}">
+                Edit Department</a></li>
+        <li>
+          <a href="{{ department.get_delete_url }}">
+            Delete Department</a></li>
+    </ul>
     <section>
         <table>
             <tr>
                 <th>Department Number:</th>
-                <td>{{ department.department_number }}</td>
+                <td>{{ Department.department_number }}</td>
             </tr>
             <tr>
                 <th>Department Name:</th>
@@ -24,7 +32,7 @@
         <ul>
             {% for disease in disease_list %}
                 <li>
-                    <a href="">{{ disease }}</a>
+                    <a href="{{ disease.get_absolute_url }}">{{ disease }}</a>
                 </li>
             {% empty %}
                 <li><em>There are currently no diseases for this department.</em></li>

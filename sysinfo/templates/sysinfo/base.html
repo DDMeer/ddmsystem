@@ -19,28 +19,28 @@
 
 <div><!-- start of container -->
     <header>
-        <h1>UIUC</h1>
+        <h1>EZ University</h1>
         <h2>Hospital Information System</h2>
     </header>
     <nav>
         <ul>
             <li>
-                <a href="">
+                <a href="{% url 'sysinfo_doctor_list_urlpattern' %}">
                     Doctors</a></li>
             <li>
-                <a href="">
+                <a href="{% url 'sysinfo_disease_list_urlpattern' %}">
                     Diseases</a></li>
             <li>
-                <a href="">
+                <a href="{% url 'sysinfo_department_list_urlpattern' %}">
                     Departments</a></li>
             <li>
-                <a href="">
+                <a href="{% url 'sysinfo_hospital_list_urlpattern' %}">
                     Hospitals</a></li>
             <li>
-                <a href="">
+                <a href="{% url 'sysinfo_patient_list_urlpattern' %}">
                     Patients</a></li>
             <li>
-                <a href="">
+                <a href="{% url 'sysinfo_treatment_list_urlpattern' %}">
                     Treatments</a></li>
         </ul>
     </nav>
