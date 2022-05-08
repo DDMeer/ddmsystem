@@ -7,7 +7,8 @@
 {% block content %}
     <h2>Patient List</h2>
     <div>
-      <a href="{% url 'sysinfo_patient_create_urlpattern' %}">
+      <a href="{% url 'sysinfo_patient_create_urlpattern' %}"
+         class="button button-primary">
         Create New Patient</a>
     </div>
     <ul>
@@ -19,4 +20,25 @@
             <li><em>There are currently no patients available.</em></li>
         {% endfor %}
     </ul>
+
+      {% if is_paginated %}
+    <ul>
+      {% if previous_page_url %}
+        <li>
+          <a href="{{ previous_page_url }}">
+            Previous</a>
+        </li>
+      {% endif %}
+      <li>
+        Page {{ patient_list.number }}
+        of {{ paginator.num_pages }}
+      </li>
+      {% if next_page_url %}
+        <li>
+          <a href="{{ next_page_url }}">
+            Next</a>
+        </li>
+      {% endif %}
+    </ul>
+  {% endif %}
 {% endblock %}

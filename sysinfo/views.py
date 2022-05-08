@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 
@@ -13,14 +14,57 @@ from sysinfo.forms import DoctorForm, DiseaseForm, DepartmentForm, HospitalForm,
 from .utils import ObjectCreateMixin
 
 
+# class DoctorList(View):
+#
+#     def get(self, request):
+#         return render(
+#             request,
+#             'sysinfo/doctor_list.html',
+#             {'doctor_list': Doctor.objects.all()}
+#         )
 class DoctorList(View):
+    page_kwarg = 'page'
+    paginate_by = 25;  # 25 doctors per page
+    template_name = 'sysinfo/doctor_list.html'
 
     def get(self, request):
-        return render(
-            request,
-            'sysinfo/doctor_list.html',
-            {'doctor_list': Doctor.objects.all()}
+        doctors = Doctor.objects.all()
+        paginator = Paginator(
+            doctors,
+            self.paginate_by
         )
+        page_number = request.GET.get(
+            self.page_kwarg
+        )
+        try:
+            page = paginator.page(page_number)
+        except PageNotAnInteger:
+            page = paginator.page(1)
+        except EmptyPage:
+            page = paginator.page(
+                paginator.num_pages)
+        if page.has_previous():
+            prev_url = "?{pkw}={n}".format(
+                pkw=self.page_kwarg,
+                n=page.previous_page_number())
+        else:
+            prev_url = None
+        if page.has_next():
+            next_url = "?{pkw}={n}".format(
+                pkw=self.page_kwarg,
+                n=page.next_page_number())
+        else:
+            next_url = None
+        context = {
+            'is_paginated':
+                page.has_other_pages(),
+            'next_page_url': next_url,
+            'paginator': paginator,
+            'previous_page_url': prev_url,
+            'doctor_list': page,
+        }
+        return render(
+            request, self.template_name, context)
 
 
 class DoctorDetail(View):
@@ -421,14 +465,59 @@ class HospitalDelete(View):
 
 
 
+# class PatientList(View):
+#
+#     def get(self, request):
+#         return render(
+#             request,
+#             'sysinfo/patient_list.html',
+#             {'patient_list': Patient.objects.all()}
+#         )
 class PatientList(View):
+    page_kwarg = 'page'
+    paginate_by = 25;  # 25 patients per page
+    template_name = 'sysinfo/patient_list.html'
 
     def get(self, request):
-        return render(
-            request,
-            'sysinfo/patient_list.html',
-            {'patient_list': Patient.objects.all()}
+        patients = Patient.objects.all()
+        paginator = Paginator(
+            patients,
+            self.paginate_by
         )
+        page_number = request.GET.get(
+            self.page_kwarg
+        )
+        try:
+            page = paginator.page(page_number)
+        except PageNotAnInteger:
+            page = paginator.page(1)
+        except EmptyPage:
+            page = paginator.page(
+                paginator.num_pages)
+        if page.has_previous():
+            prev_url = "?{pkw}={n}".format(
+                pkw=self.page_kwarg,
+                n=page.previous_page_number())
+        else:
+            prev_url = None
+        if page.has_next():
+            next_url = "?{pkw}={n}".format(
+                pkw=self.page_kwarg,
+                n=page.next_page_number())
+        else:
+            next_url = None
+        context = {
+            'is_paginated':
+                page.has_other_pages(),
+            'next_page_url': next_url,
+            'paginator': paginator,
+            'previous_page_url': prev_url,
+            'patient_list': page,
+        }
+        return render(
+            request, self.template_name, context)
+
+
 
 
 class PatientDetail(View):
