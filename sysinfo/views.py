@@ -1,6 +1,7 @@
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse_lazy
 from django.views import View
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 from .models import (
     Doctor,
@@ -11,124 +12,42 @@ from .models import (
     Treatment,
 )
 from sysinfo.forms import DoctorForm, DiseaseForm, DepartmentForm, HospitalForm, PatientForm, TreatmentForm
-from .utils import ObjectCreateMixin
+from .utils import PageLinksMixin
 
 
-# class DoctorList(View):
-#
-#     def get(self, request):
-#         return render(
-#             request,
-#             'sysinfo/doctor_list.html',
-#             {'doctor_list': Doctor.objects.all()}
-#         )
-class DoctorList(View):
-    page_kwarg = 'page'
-    paginate_by = 25;  # 25 doctors per page
-    template_name = 'sysinfo/doctor_list.html'
-
-    def get(self, request):
-        doctors = Doctor.objects.all()
-        paginator = Paginator(
-            doctors,
-            self.paginate_by
-        )
-        page_number = request.GET.get(
-            self.page_kwarg
-        )
-        try:
-            page = paginator.page(page_number)
-        except PageNotAnInteger:
-            page = paginator.page(1)
-        except EmptyPage:
-            page = paginator.page(
-                paginator.num_pages)
-        if page.has_previous():
-            prev_url = "?{pkw}={n}".format(
-                pkw=self.page_kwarg,
-                n=page.previous_page_number())
-        else:
-            prev_url = None
-        if page.has_next():
-            next_url = "?{pkw}={n}".format(
-                pkw=self.page_kwarg,
-                n=page.next_page_number())
-        else:
-            next_url = None
-        context = {
-            'is_paginated':
-                page.has_other_pages(),
-            'next_page_url': next_url,
-            'paginator': paginator,
-            'previous_page_url': prev_url,
-            'doctor_list': page,
-        }
-        return render(
-            request, self.template_name, context)
+class DoctorList(PageLinksMixin, ListView):
+    paginate_by = 25
+    model = Doctor
 
 
-class DoctorDetail(View):
+class DoctorDetail(DetailView):
+    model = Doctor
 
-    def get(self, request, pk):
-        doctor = get_object_or_404(
-            Doctor,
-            pk=pk
-        )
+    def get_context_data(self, **kwargs):
+        context = super(DetailView, self).get_context_data(**kwargs)
+        doctor = self.get_object()
         disease_list = doctor.diseases.all()
-        return render(
-            request,
-            'sysinfo/doctor_detail.html',
-            {'doctor': doctor, 'disease_list': disease_list}
-        )
+        context['disease_list'] = disease_list
+        return context
 
 
-class DoctorCreate(ObjectCreateMixin, View):
+class DoctorCreate(CreateView):
     form_class = DoctorForm
-    template_name = 'sysinfo/doctor_form.html'
+    model = Doctor
 
 
-class DoctorUpdate(View):
+class DoctorUpdate(UpdateView):
     form_class = DoctorForm
     model = Doctor
     template_name = 'sysinfo/doctor_form_update.html'
 
-    def get_object(self, pk):
-        return get_object_or_404(
-            self.model,
-            pk=pk)
+
+class DoctorDelete(DeleteView):
+    model = Doctor
+    success_url = reverse_lazy('sysinfo_doctor_list_urlpattern')
 
     def get(self, request, pk):
-        doctor = self.get_object(pk)
-        context = {
-            'form': self.form_class(
-                instance=doctor),
-            'doctor': doctor,
-        }
-        return render(
-            request, self.template_name, context)
-
-    def post(self, request, pk):
-        doctor = self.get_object(pk)
-        bound_form = self.form_class(
-            request.POST, instance=doctor)
-        if bound_form.is_valid():
-            new_doctor = bound_form.save()
-            return redirect(new_doctor)
-        else:
-            context = {
-                'form': bound_form,
-                'doctor': doctor,
-            }
-            return render(
-                request,
-                self.template_name,
-                context)
-
-
-class DoctorDelete(View):
-
-    def get(self, request, pk):
-        doctor = self.get_object(pk)
+        doctor = get_object_or_404(Doctor, pk=pk)
         diseases = doctor.diseases.all()
         if diseases.count() > 0:
             return render(
@@ -145,95 +64,45 @@ class DoctorDelete(View):
                 {'doctor': doctor}
             )
 
-    def get_object(self, pk):
-        return get_object_or_404(
-            Doctor,
-            pk=pk)
 
-    def post(self, request, pk):
-        doctor = self.get_object(pk)
-        doctor.delete()
-        return redirect('sysinfo_doctor_list_urlpattern')
+class DiseaseList(ListView):
+    model = Disease
 
 
-class DiseaseList(View):
+class DiseaseDetail(DetailView):
+    model = Disease
 
-    def get(self, request):
-        return render(
-            request,
-            'sysinfo/disease_list.html',
-            {'disease_list': Disease.objects.all()}
-        )
-
-
-class DiseaseDetail(View):
-
-    def get(self, request, pk):
-        disease = get_object_or_404(
-            Disease,
-            pk=pk
-        )
+    def get_context_data(self, **kwargs):
+        context = super(DetailView, self).get_context_data(**kwargs)
+        disease = self.get_object()
         hospital = disease.hospital
         department = disease.department
         doctor = disease.doctor
         treatment_list = disease.treatments.all()
-        return render(
-            request,
-            'sysinfo/disease_detail.html',
-            {'disease': disease,
-             'hospital': hospital,
-             'department': department,
-             'doctor': doctor,
-             'treatment_list': treatment_list}
-        )
+        context['hospital'] = hospital
+        context['department'] = department
+        context['doctor'] = doctor
+        context['treatment_list'] = treatment_list
+        return context
 
 
-class DiseaseCreate(ObjectCreateMixin, View):
+class DiseaseCreate(CreateView):
     form_class = DiseaseForm
-    template_name = 'sysinfo/disease_form.html'
+    model = Disease
 
 
-class DiseaseUpdate(View):
+class DiseaseUpdate(UpdateView):
     form_class = DiseaseForm
     model = Disease
     template_name = 'sysinfo/disease_form_update.html'
 
-    def get_object(self, pk):
-        return get_object_or_404(
-            self.model,
-            pk=pk)
+
+class DiseaseDelete(DeleteView):
+    model = Disease
+    success_url = reverse_lazy('sysinfo_disease_list_urlpattern')
 
     def get(self, request, pk):
-        section = self.get_object(pk)
-        context = {
-            'form': self.form_class(
-                instance=section),
-            'section': section,
-        }
-        return render(
-            request, self.template_name, context)
-
-    def post(self, request, pk):
-        disease = self.get_object(pk)
-        bound_form = self.form_class(
-            request.POST, instance=disease)
-        if bound_form.is_valid():
-            new_section = bound_form.save()
-            return redirect(new_section)
-        else:
-            context = {
-                'form': bound_form,
-                'disease': disease,
-            }
-            return render(
-                request,
-                self.template_name,
-                context)
-
-class DiseaseDelete(View):
-
-    def get(self, request, pk):
-        disease = self.get_object(pk)
+        disease = get_object_or_404(Disease, pk=pk)
         treatments = disease.treatments.all()
         if treatments.count() > 0:
             return render(
@@ -250,89 +119,39 @@ class DiseaseDelete(View):
                 {'disease': disease}
             )
 
-    def get_object(self, pk):
-        return get_object_or_404(
-            Disease,
-            pk=pk)
 
-    def post(self, request, pk):
-        disease = self.get_object(pk)
-        disease.delete()
-        return redirect('sysinfo_disease_list_urlpattern')
+class DepartmentList(ListView):
+    model = Department
 
 
-class DepartmentList(View):
+class DepartmentDetail(DetailView):
+    model = Department
 
-    def get(self, request):
-        return render(
-            request,
-            'sysinfo/department_list.html',
-            {'department_list': Department.objects.all()}
-        )
-
-
-class DepartmentDetail(View):
-
-    def get(self, request, pk):
-        department = get_object_or_404(
-            Department,
-            pk=pk
-        )
+    def get_context_data(self, **kwargs):
+        context = super(DetailView, self).get_context_data(**kwargs)
+        department = self.get_object()
         disease_list = department.diseases.all()
-        return render(
-            request,
-            'sysinfo/department_detail.html',
-            {'department': department, 'disease_list': disease_list}
-        )
+        context['disease_list'] = disease_list
+        return context
 
 
-class DepartmentCreate(ObjectCreateMixin, View):
+class DepartmentCreate(CreateView):
     form_class = DepartmentForm
-    template_name = 'sysinfo/department_form.html'
+    model = Department
 
 
-class DepartmentUpdate(View):
+class DepartmentUpdate(UpdateView):
     form_class = DepartmentForm
     model = Department
     template_name = 'sysinfo/department_form_update.html'
 
-    def get_object(self, pk):
-        return get_object_or_404(
-            self.model,
-            pk=pk)
+
+class DepartmentDelete(DeleteView):
+    model = Department
+    success_url = reverse_lazy('sysinfo_department_list_urlpattern')
 
     def get(self, request, pk):
-        department = self.get_object(pk)
-        context = {
-            'form': self.form_class(
-                instance=department),
-            'department': department,
-        }
-        return render(
-            request, self.template_name, context)
-
-    def post(self, request, pk):
-        department = self.get_object(pk)
-        bound_form = self.form_class(
-            request.POST, instance=department)
-        if bound_form.is_valid():
-            new_department = bound_form.save()
-            return redirect(new_department)
-        else:
-            context = {
-                'form': bound_form,
-                'department': department,
-            }
-            return render(
-                request,
-                self.template_name,
-                context)
-
-
-class DepartmentDelete(View):
-
-    def get(self, request, pk):
-        department = self.get_object(pk)
+        department = get_object_or_404(Department, pk=pk)
         diseases = department.diseases.all()
         if diseases.count() > 0:
             return render(
@@ -349,92 +168,39 @@ class DepartmentDelete(View):
                 {'department': department}
             )
 
-    def get_object(self, pk):
-        department = get_object_or_404(
-            Department,
-            pk=pk
-        )
-        return department
 
-    def post(self, request, pk):
-        department = self.get_object(pk)
-        department.delete()
-        return redirect('sysinfo_department_list_urlpattern')
+class HospitalList(ListView):
+    model = Hospital
 
 
+class HospitalDetail(DetailView):
+    model = Hospital
 
-class HospitalList(View):
-
-    def get(self, request):
-        return render(
-            request,
-            'sysinfo/hospital_list.html',
-            {'hospital_list': Hospital.objects.all()}
-        )
-
-
-class HospitalDetail(View):
-
-    def get(self, request, pk):
-        hospital = get_object_or_404(
-            Hospital,
-            pk=pk
-        )
+    def get_context_data(self, **kwargs):
+        context = super(DetailView, self).get_context_data(**kwargs)
+        hospital = self.get_object()
         disease_list = hospital.diseases.all()
-        return render(
-            request,
-            'sysinfo/hospital_detail.html',
-            {'hospital': hospital, 'disease_list': disease_list}
-        )
+        context['disease_list'] = disease_list
+        return context
 
 
-class HospitalCreate(ObjectCreateMixin, View):
+class HospitalCreate(CreateView):
     form_class = HospitalForm
-    template_name = 'sysinfo/hospital_form.html'
+    model = Hospital
 
 
-class HospitalUpdate(View):
+class HospitalUpdate(UpdateView):
     form_class = HospitalForm
     model = Hospital
     template_name = 'sysinfo/hospital_form_update.html'
 
-    def get_object(self, pk):
-        return get_object_or_404(
-            self.model,
-            pk=pk)
+
+class HospitalDelete(DeleteView):
+    model = Hospital
+    success_url = reverse_lazy('sysinfo_hospital_list_urlpattern')
 
     def get(self, request, pk):
-        hospital = self.get_object(pk)
-        context = {
-            'form': self.form_class(
-                instance=hospital),
-            'hospital': hospital,
-        }
-        return render(
-            request, self.template_name, context)
-
-    def post(self, request, pk):
-        hospital = self.get_object(pk)
-        bound_form = self.form_class(
-            request.POST, instance=hospital)
-        if bound_form.is_valid():
-            new_hospital = bound_form.save()
-            return redirect(new_hospital)
-        else:
-            context = {
-                'form': bound_form,
-                'hospital': hospital,
-            }
-            return render(
-                request,
-                self.template_name,
-                context)
-
-
-class HospitalDelete(View):
-
-    def get(self, request, pk):
-        hospital = self.get_object(pk)
+        hospital = get_object_or_404(Hospital, pk=pk)
         diseases = hospital.diseases.all()
         if diseases.count() > 0:
             return render(
@@ -451,137 +217,41 @@ class HospitalDelete(View):
                 {'hospital': hospital}
             )
 
-    def get_object(self, pk):
-        hospital = get_object_or_404(
-            Hospital,
-            pk=pk
-        )
-        return hospital
 
-    def post(self, request, pk):
-        hospital = self.get_object(pk)
-        hospital.delete()
-        return redirect('sysinfo_hospital_list_urlpattern')
+class PatientList(PageLinksMixin, ListView):
+    paginate_by = 25
+    model = Patient
+    permission_required = 'sysinfo.view_patient'
 
 
+class PatientDetail(DetailView):
+    model = Patient
 
-# class PatientList(View):
-#
-#     def get(self, request):
-#         return render(
-#             request,
-#             'sysinfo/patient_list.html',
-#             {'patient_list': Patient.objects.all()}
-#         )
-class PatientList(View):
-    page_kwarg = 'page'
-    paginate_by = 25;  # 25 patients per page
-    template_name = 'sysinfo/patient_list.html'
-
-    def get(self, request):
-        patients = Patient.objects.all()
-        paginator = Paginator(
-            patients,
-            self.paginate_by
-        )
-        page_number = request.GET.get(
-            self.page_kwarg
-        )
-        try:
-            page = paginator.page(page_number)
-        except PageNotAnInteger:
-            page = paginator.page(1)
-        except EmptyPage:
-            page = paginator.page(
-                paginator.num_pages)
-        if page.has_previous():
-            prev_url = "?{pkw}={n}".format(
-                pkw=self.page_kwarg,
-                n=page.previous_page_number())
-        else:
-            prev_url = None
-        if page.has_next():
-            next_url = "?{pkw}={n}".format(
-                pkw=self.page_kwarg,
-                n=page.next_page_number())
-        else:
-            next_url = None
-        context = {
-            'is_paginated':
-                page.has_other_pages(),
-            'next_page_url': next_url,
-            'paginator': paginator,
-            'previous_page_url': prev_url,
-            'patient_list': page,
-        }
-        return render(
-            request, self.template_name, context)
-
-
-
-
-class PatientDetail(View):
-
-    def get(self, request, pk):
-        patient = get_object_or_404(
-            Patient,
-            pk=pk
-        )
+    def get_context_data(self, **kwargs):
+        context = super(DetailView, self).get_context_data(**kwargs)
+        patient = self.get_object()
         treatment_list = patient.treatments.all()
-        return render(
-            request,
-            'sysinfo/patient_detail.html',
-            {'patient': patient, 'treatment_list': treatment_list}
-        )
+        context['treatment_list'] = treatment_list
+        return context
 
 
-class PatientCreate(ObjectCreateMixin, View):
+class PatientCreate(CreateView):
     form_class = PatientForm
-    template_name = 'sysinfo/patient_form.html'
+    model = Patient
 
 
-class PatientUpdate(View):
+class PatientUpdate(UpdateView):
     form_class = PatientForm
     model = Patient
     template_name = 'sysinfo/patient_form_update.html'
 
-    def get_object(self, pk):
-        return get_object_or_404(
-            self.model,
-            pk=pk)
+
+class PatientDelete(DeleteView):
+    model = Patient
+    success_url = reverse_lazy('sysinfo_patient_list_urlpattern')
 
     def get(self, request, pk):
-        patient = self.get_object(pk)
-        context = {
-            'form': self.form_class(
-                instance=patient),
-            'patient': patient,
-        }
-        return render(
-            request, self.template_name, context)
-
-    def post(self, request, pk):
-        patient = self.get_object(pk)
-        bound_form = self.form_class(
-            request.POST, instance=patient)
-        if bound_form.is_valid():
-            new_patient = bound_form.save()
-            return redirect(new_patient)
-        else:
-            context = {
-                'form': bound_form,
-                'patient': patient,
-            }
-            return render(
-                request,
-                self.template_name,
-                context)
-
-
-class PatientDelete(View):
-
-    def get(self, request, pk):
-        patient = self.get_object(pk)
+        patient = get_object_or_404(Patient, pk=pk)
         treatments = patient.treatments.all()
         if treatments.count() > 0:
             return render(
@@ -598,104 +268,35 @@ class PatientDelete(View):
                 {'patient': patient}
             )
 
-    def get_object(self, pk):
-        patient = get_object_or_404(
-            Patient,
-            pk=pk
-        )
-        return patient
 
-    def post(self, request, pk):
-        patient = self.get_object(pk)
-        patient.delete()
-        return redirect('sysinfo_patient_list_urlpattern')
+class TreatmentList(ListView):
+    model = Treatment
 
 
-class TreatmentList(View):
+class TreatmentDetail(DetailView):
+    model = Treatment
 
-    def get(self, request):
-        return render(
-            request,
-            'sysinfo/treatment_list.html',
-            {'treatment_list': Treatment.objects.all()}
-        )
-
-
-class TreatmentDetail(View):
-
-    def get(self, request, pk):
-        treatment = get_object_or_404(
-            Treatment,
-            pk=pk
-        )
-        return render(
-            request,
-            'sysinfo/treatment_detail.html',
-            {'treatment': treatment, 'patient': treatment.patient, 'disease': treatment.disease}
-        )
+    def get_context_data(self, **kwargs):
+        context = super(DetailView, self).get_context_data(**kwargs)
+        treatment = self.get_object()
+        patient = treatment.patient
+        disease = treatment.disease
+        context['patient'] = patient
+        context['disease'] = disease
+        return context
 
 
-class TreatmentCreate(ObjectCreateMixin, View):
+class TreatmentCreate(CreateView):
     form_class = TreatmentForm
-    template_name = 'sysinfo/treatment_form.html'
+    model = Treatment
 
 
-class TreatmentUpdate(View):
+class TreatmentUpdate(UpdateView):
     form_class = TreatmentForm
     model = Treatment
     template_name = 'sysinfo/treatment_form_update.html'
 
-    def get_object(self, pk):
-        return get_object_or_404(
-            self.model,
-            pk=pk)
 
-    def get(self, request, pk):
-        treatment = self.get_object(pk)
-        context = {
-            'form': self.form_class(
-                instance=treatment),
-            'treatment': treatment,
-        }
-        return render(
-            request, self.template_name, context)
-
-    def post(self, request, pk):
-        treatment = self.get_object(pk)
-        bound_form = self.form_class(
-            request.POST, instance=treatment)
-        if bound_form.is_valid():
-            new_treatment = bound_form.save()
-            return redirect(new_treatment)
-        else:
-            context = {
-                'form': bound_form,
-                'treatment': treatment,
-            }
-            return render(
-                request,
-                self.template_name,
-                context)
-
-
-class TreatmentDelete(View):
-
-    def get(self, request, pk):
-        treatment = self.get_object(pk)
-        return render(
-            request,
-            'sysinfo/treatment_confirm_delete.html',
-            {'treatment': treatment}
-        )
-
-    def get_object(self, pk):
-        treatment = get_object_or_404(
-            Treatment,
-            pk=pk
-        )
-        return treatment
-
-    def post(self, request, pk):
-        treatment = self.get_object(pk)
-        treatment.delete()
-        return redirect('sysinfo_treatment_list_urlpattern')
+class TreatmentDelete(DeleteView):
+    model = Treatment
+    success_url = reverse_lazy('sysinfo_treatment_list_urlpattern')
