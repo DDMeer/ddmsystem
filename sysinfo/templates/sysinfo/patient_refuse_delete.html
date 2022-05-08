@@ -9,14 +9,13 @@
         <h2>Error Deleting Patient</h2>
         <p>
             You may not delete patient {{ patient }}.  This
-            patient is currently have the following
+            patient is currently has the following
             diseases:
-
         </p>
 
         <ul>
             {% for treatment in treatments %}
-            <li><a href="{{ treatment.get_absolute_url }}">{{ treatment.disease }}</a></li>
+            <li><a href="{{ treatment.get_absolute_url }}">{{ treatment.section }}</a></li>
             {%  endfor %}
         </ul>
 

@@ -13,7 +13,9 @@
             Are you sure that you want to delete
             hospital {{ hospital }}?
         </p>
-        <a href="{{ hospital.get_absolute_url }}">Cancel</a>
-        <button type="submit">Delete Hospital</button>
+        <a href="{{ hospital.get_absolute_url }}"
+           class="button button-primary">
+            Cancel</a>
+        <button type="submit" class="button button-primary">Delete Hospital</button>
     </form>
 {% endblock %}

@@ -7,8 +7,9 @@
 {% block content %}
     <h2>Department List</h2>
     <div>
-        <a href="{% url 'sysinfo_department_create_urlpattern' %}">
-            Create New Course</a>
+        <a href="{% url 'sysinfo_department_create_urlpattern' %}"
+            class="button button-primary">
+            Create New Department</a>
     </div>
     <ul>
         {% for department in department_list %}

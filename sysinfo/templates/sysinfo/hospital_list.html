@@ -7,8 +7,9 @@
 {% block content %}
     <h2>Hospital List</h2>
     <div>
-      <a href="{% url 'sysinfo_hospital_create_urlpattern' %}">
-        Create New Hospital</a>
+      <a href="{% url 'sysinfo_hospital_create_urlpattern' %}"
+         class="button button-primary">
+          Create New Hospital</a>
     </div>
     <ul>
         {% for hospital in hospital_list %}

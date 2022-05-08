@@ -13,7 +13,9 @@
             Are you sure that you want to delete
             disease {{ disease }}?
         </p>
-        <a href="{{ disease.get_absolute_url }}">Cancel</a>
-        <button type="submit">Delete Disease</button>
+        <a href="{{ disease.get_absolute_url }}"
+            class="button button-primary">
+            Cancel</a>
+        <button type="submit" class="button button-primary">Delete Disease</button>
     </form>
 {% endblock %}

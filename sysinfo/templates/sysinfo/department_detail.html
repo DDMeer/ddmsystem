@@ -6,19 +6,21 @@
 
 {% block content %}
     <h2>{{ department }}</h2>
-    <ul>
+    <ul class="ezu-button-list">
         <li>
-            <a href="{{ department.get_update_url }}">
+            <a href="{{ department.get_update_url }}"
+                class="button button-primary">
                 Edit Department</a></li>
         <li>
-          <a href="{{ department.get_delete_url }}">
-            Delete Department</a></li>
+          <a href="{{ department.get_delete_url }}"
+             class="button button-primary">
+              Delete Department</a></li>
     </ul>
     <section>
         <table>
             <tr>
                 <th>Department Number:</th>
-                <td>{{ Department.department_number }}</td>
+                <td>{{ department.department_number }}</td>
             </tr>
             <tr>
                 <th>Department Name:</th>

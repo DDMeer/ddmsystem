@@ -7,7 +7,8 @@
 {% block content %}
     <h2>Disease List</h2>
     <div>
-      <a href="{% url 'sysinfo_disease_create_urlpattern' %}">
+      <a href="{% url 'sysinfo_disease_create_urlpattern' %}"
+      class="button button-primary">
         Create New Disease</a>
     </div>
     <ul>
@@ -16,7 +17,7 @@
                 <a href="{{ disease.get_absolute_url }}">{{ disease }}</a>
             </li>
         {% empty %}
-            <li><em>There are currently no diseases available.</em></li>
+            <li><em>There are currently no diseases.</em></li>
         {% endfor %}
     </ul>
 {% endblock %}

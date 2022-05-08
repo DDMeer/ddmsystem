@@ -6,12 +6,14 @@
 
 {% block content %}
     <h2>{{ doctor }}</h2>
-    <ul>
+    <ul class="ezu-button-list">
         <li>
-          <a href="{{ doctor.get_update_url }}">
+          <a href="{{ doctor.get_update_url }}"
+             class="button button-primary">
             Edit Doctor</a></li>
         <li>
-          <a href="{{ doctor.get_delete_url }}">
+          <a href="{{ doctor.get_delete_url }}"
+             class="button button-primary">
             Delete Doctor</a></li>
     </ul>
 
@@ -42,7 +44,7 @@
                     <a href="{{ disease.get_absolute_url }}">{{ disease }}</a>
                 </li>
             {% empty %}
-                <li><em>There are currently no diseases for this doctor.</em></li>
+                <li><em>There are currently no diseases responsible for this doctor.</em></li>
             {% endfor %}
         </ul>
     </section>

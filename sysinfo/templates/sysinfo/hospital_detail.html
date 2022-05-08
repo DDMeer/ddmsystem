@@ -6,11 +6,14 @@
 
 {% block content %}
     <h2>{{ hospital }}</h2>
-    <ul>
+    <ul class="ezu-button-list">
         <li>
-          <a href="{{ hospital.get_update_url }}">
+          <a href="{{ hospital.get_update_url }}"
+             class="button button-primary">
             Edit Hospital</a></li>
-          <a href="{{ hospital.get_delete_url }}">
+        <li>
+          <a href="{{ hospital.get_delete_url }}"
+             class="button button-primary">
             Delete Hospital</a></li>
     </ul>
 
