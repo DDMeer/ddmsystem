@@ -26,6 +26,19 @@
 <body>
 
 <div class="container">
+    <div class="status row">
+        <div class="offset-by-eight four columns">
+            <ul class="inline">
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'logout_urlpattern' %}">
+                        Log Out, {{ user.get_username }}</a></li>
+                {% else %}
+                    <li><a href="{% url 'login_urlpattern' %}">
+                        Log In</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
     <header class="row">
         <div class="offset-by-one ten columns">
             <h1 class="logo">DD Hospital</h1>
@@ -34,27 +47,49 @@
     </header>
     <nav>
         <ul>
-            <li>
-                <a href="{% url 'sysinfo_doctor_list_urlpattern' %}">
-                    Doctors</a></li>
-            <li>
-                <a href="{% url 'sysinfo_disease_list_urlpattern' %}">
-                    Diseases</a></li>
-            <li>
-                <a href="{% url 'sysinfo_department_list_urlpattern' %}">
-                    Departments</a></li>
-            <li>
-                <a href="{% url 'sysinfo_hospital_list_urlpattern' %}">
-                    Hospitals</a></li>
-            <li>
-                <a href="{% url 'sysinfo_patient_list_urlpattern' %}">
-                    Patients</a></li>
-            <li>
-                <a href="{% url 'sysinfo_treatment_list_urlpattern' %}">
-                    Treatments</a></li>
+            {% if perms.sysinfo.view_doctor %}
+                <li>
+                    <a href="{% url 'sysinfo_doctor_list_urlpattern' %}">
+                        Doctors</a></li>
+            {% endif %}
+
+            {% if perms.sysinfo.view_disease %}
+                <li>
+                    <a href="{% url 'sysinfo_disease_list_urlpattern' %}">
+                        Diseases</a></li>
+            {% endif %}
+
+            {% if perms.sysinfo.view_department %}
+                <li>
+                    <a href="{% url 'sysinfo_department_list_urlpattern' %}">
+                        Departments</a></li>
+            {% endif %}
+
+            {% if perms.sysinfo.view_hospital %}
+                <li>
+                    <a href="{% url 'sysinfo_hospital_list_urlpattern' %}">
+                        Hospitals</a></li>
+            {% endif %}
+
+
+            {% if perms.sysinfo.view_patient %}
+                <li>
+                    <a href="{% url 'sysinfo_patient_list_urlpattern' %}">
+                        Patients</a></li>
+            {% endif %}
+
+
+            {% if perms.sysinfo.view_treatment %}
+                <li>
+                    <a href="{% url 'sysinfo_treatment_list_urlpattern' %}">
+                        Treatments</a></li>
+            {% endif %}
+
+
             <li>
                 <a href="{% url 'about_urlpattern' %}">
                     About</a></li>
+
         </ul>
     </nav>
     <main>

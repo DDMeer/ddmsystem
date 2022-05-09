@@ -1,13 +1,24 @@
 from django.contrib import admin
+from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path, include
 from django.views.generic import RedirectView, TemplateView
 
 urlpatterns = [
     path('',
          RedirectView.as_view(
-             pattern_name='sysinfo_disease_list_urlpattern',
+             pattern_name='about_urlpattern',
              permanent=False
          )),
+
+    path('login/',
+         LoginView.as_view(template_name='sysinfo/login.html'),
+         name='login_urlpattern'
+         ),
+
+    path('logout/',
+         LogoutView.as_view(),
+         name='logout_urlpattern'
+         ),
 
     path('about/',
          TemplateView.as_view(
