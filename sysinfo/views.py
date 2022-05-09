@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views import View
@@ -15,13 +16,15 @@ from sysinfo.forms import DoctorForm, DiseaseForm, DepartmentForm, HospitalForm,
 from .utils import PageLinksMixin
 
 
-class DoctorList(PageLinksMixin, ListView):
+class DoctorList(LoginRequiredMixin, PermissionRequiredMixin, PageLinksMixin, ListView):
     paginate_by = 25
     model = Doctor
+    permission_required = 'sysinfo.view_doctor'
 
 
-class DoctorDetail(DetailView):
+class DoctorDetail(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     model = Doctor
+    permission_required = 'sysinfo.view_doctor'
 
     def get_context_data(self, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs)
@@ -31,20 +34,23 @@ class DoctorDetail(DetailView):
         return context
 
 
-class DoctorCreate(CreateView):
+class DoctorCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     form_class = DoctorForm
     model = Doctor
+    permission_required = 'sysinfo.add_doctor'
 
 
-class DoctorUpdate(UpdateView):
+class DoctorUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     form_class = DoctorForm
     model = Doctor
     template_name = 'sysinfo/doctor_form_update.html'
+    permission_required = 'sysinfo.change_doctor'
 
 
-class DoctorDelete(DeleteView):
+class DoctorDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Doctor
     success_url = reverse_lazy('sysinfo_doctor_list_urlpattern')
+    permission_required = 'sysinfo.delete_doctor'
 
     def get(self, request, pk):
         doctor = get_object_or_404(Doctor, pk=pk)
@@ -65,12 +71,14 @@ class DoctorDelete(DeleteView):
             )
 
 
-class DiseaseList(ListView):
+class DiseaseList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Disease
+    permission_required = 'sysinfo.view_disease'
 
 
-class DiseaseDetail(DetailView):
+class DiseaseDetail(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     model = Disease
+    permission_required = 'sysinfo.view_disease'
 
     def get_context_data(self, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs)
@@ -86,20 +94,23 @@ class DiseaseDetail(DetailView):
         return context
 
 
-class DiseaseCreate(CreateView):
+class DiseaseCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     form_class = DiseaseForm
     model = Disease
+    permission_required = 'sysinfo.add_disease'
 
 
-class DiseaseUpdate(UpdateView):
+class DiseaseUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     form_class = DiseaseForm
     model = Disease
     template_name = 'sysinfo/disease_form_update.html'
+    permission_required = 'sysinfo.change_disease'
 
 
-class DiseaseDelete(DeleteView):
+class DiseaseDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Disease
     success_url = reverse_lazy('sysinfo_disease_list_urlpattern')
+    permission_required = 'sysinfo.delete_disease'
 
     def get(self, request, pk):
         disease = get_object_or_404(Disease, pk=pk)
@@ -120,12 +131,14 @@ class DiseaseDelete(DeleteView):
             )
 
 
-class DepartmentList(ListView):
+class DepartmentList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Department
+    permission_required = 'sysinfo.view_department'
 
 
-class DepartmentDetail(DetailView):
+class DepartmentDetail(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     model = Department
+    permission_required = 'sysinfo.view_department'
 
     def get_context_data(self, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs)
@@ -135,20 +148,23 @@ class DepartmentDetail(DetailView):
         return context
 
 
-class DepartmentCreate(CreateView):
+class DepartmentCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     form_class = DepartmentForm
     model = Department
+    permission_required = 'sysinfo.add_department'
 
 
-class DepartmentUpdate(UpdateView):
+class DepartmentUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     form_class = DepartmentForm
     model = Department
     template_name = 'sysinfo/department_form_update.html'
+    permission_required = 'sysinfo.change_department'
 
 
-class DepartmentDelete(DeleteView):
+class DepartmentDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Department
     success_url = reverse_lazy('sysinfo_department_list_urlpattern')
+    permission_required = 'sysinfo.delete_department'
 
     def get(self, request, pk):
         department = get_object_or_404(Department, pk=pk)
@@ -169,12 +185,14 @@ class DepartmentDelete(DeleteView):
             )
 
 
-class HospitalList(ListView):
+class HospitalList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Hospital
+    permission_required = 'sysinfo.view_hospital'
 
 
 class HospitalDetail(DetailView):
     model = Hospital
+    permission_required = 'sysinfo.view_hospital'
 
     def get_context_data(self, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs)
@@ -184,20 +202,23 @@ class HospitalDetail(DetailView):
         return context
 
 
-class HospitalCreate(CreateView):
+class HospitalCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     form_class = HospitalForm
     model = Hospital
+    permission_required = 'sysinfo.add_hospital'
 
 
-class HospitalUpdate(UpdateView):
+class HospitalUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     form_class = HospitalForm
     model = Hospital
     template_name = 'sysinfo/hospital_form_update.html'
+    permission_required = 'sysinfo.change_hospital'
 
 
-class HospitalDelete(DeleteView):
+class HospitalDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Hospital
     success_url = reverse_lazy('sysinfo_hospital_list_urlpattern')
+    permission_required = 'sysinfo.delete_hospital'
 
     def get(self, request, pk):
         hospital = get_object_or_404(Hospital, pk=pk)
@@ -218,14 +239,15 @@ class HospitalDelete(DeleteView):
             )
 
 
-class PatientList(PageLinksMixin, ListView):
+class PatientList(LoginRequiredMixin, PermissionRequiredMixin, PageLinksMixin, ListView):
     paginate_by = 25
     model = Patient
     permission_required = 'sysinfo.view_patient'
 
 
-class PatientDetail(DetailView):
+class PatientDetail(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     model = Patient
+    permission_required = 'sysinfo.view_patient'
 
     def get_context_data(self, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs)
@@ -235,20 +257,23 @@ class PatientDetail(DetailView):
         return context
 
 
-class PatientCreate(CreateView):
+class PatientCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     form_class = PatientForm
     model = Patient
+    permission_required = 'sysinfo.add_patient'
 
 
-class PatientUpdate(UpdateView):
+class PatientUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     form_class = PatientForm
     model = Patient
     template_name = 'sysinfo/patient_form_update.html'
+    permission_required = 'sysinfo.change_patient'
 
 
-class PatientDelete(DeleteView):
+class PatientDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Patient
     success_url = reverse_lazy('sysinfo_patient_list_urlpattern')
+    permission_required = 'sysinfo.delete_patient'
 
     def get(self, request, pk):
         patient = get_object_or_404(Patient, pk=pk)
@@ -269,12 +294,14 @@ class PatientDelete(DeleteView):
             )
 
 
-class TreatmentList(ListView):
+class TreatmentList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Treatment
+    permission_required = 'sysinfo.view_treatment'
 
 
-class TreatmentDetail(DetailView):
+class TreatmentDetail(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     model = Treatment
+    permission_required = 'sysinfo.view_treatment'
 
     def get_context_data(self, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs)
@@ -286,17 +313,21 @@ class TreatmentDetail(DetailView):
         return context
 
 
-class TreatmentCreate(CreateView):
+class TreatmentCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     form_class = TreatmentForm
     model = Treatment
+    permission_required = 'sysinfo.add_treatment'
 
 
-class TreatmentUpdate(UpdateView):
+class TreatmentUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     form_class = TreatmentForm
     model = Treatment
     template_name = 'sysinfo/treatment_form_update.html'
+    permission_required = 'sysinfo.change_treatment'
 
 
-class TreatmentDelete(DeleteView):
+class TreatmentDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Treatment
     success_url = reverse_lazy('sysinfo_treatment_list_urlpattern')
+    permission_required = 'sysinfo.delete_treatment'
+
